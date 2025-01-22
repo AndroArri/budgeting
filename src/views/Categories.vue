@@ -94,12 +94,15 @@ async function handleSubmit() {
 
       if (err) throw err
     } else {
+      const user = await supabase.auth.getUser();
+      const user_id = user.data.user?.id
       const { error: err } = await supabase
         .from('categories')
         .insert({
           title: formData.value.title,
           icon: formData.value.icon,
-          color: formData.value.color
+          color: formData.value.color,
+          user_id: user_id
         })
 
       if (err) throw err
