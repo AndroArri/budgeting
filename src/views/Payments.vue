@@ -68,6 +68,9 @@ async function fetchCategories() {
       .order('title', { ascending: true })
 
     if (err) throw err
+    if(data.length === 0) {
+      throw new Error('No categories found');
+    }
     categories.value = data
   } catch (e) {
     error.value = 'Error loading categories'
@@ -335,7 +338,7 @@ onMounted(() => {
                   </label>
                   <div class="relative mt-1 rounded-md shadow-sm">
                     <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                      <span class="text-gray-500 sm:text-sm">$</span>
+                      <span class="text-gray-500 sm:text-sm">€</span>
                     </div>
                     <input
                       type="number"
