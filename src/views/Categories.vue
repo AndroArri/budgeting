@@ -184,7 +184,6 @@ onMounted(() => {
           <span class="text-2xl">{{ category.icon }}</span>
         </div>
         <div class="min-w-0 flex-1">
-          <span class="absolute inset-0" aria-hidden="true" />
           <p class="text-sm font-medium text-gray-900">{{ category.title }}</p>
         </div>
         <div class="flex-shrink-0 space-x-2">
