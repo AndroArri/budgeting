@@ -192,7 +192,10 @@ async function fetchData() {
       .select('*')
     
     if (budgetsError) throw budgetsError
-    budgets.value = budgetsData
+    budgets.value = budgetsData.map(budget => ({
+      ...budget,
+      is_percentage: budget.is_percentage ?? false
+    }))
 
   } catch (e) {
     error.value = 'Error loading dashboard data'

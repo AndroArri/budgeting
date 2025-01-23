@@ -96,6 +96,9 @@ async function handleSubmit() {
     } else {
       const user = await supabase.auth.getUser();
       const user_id = user.data.user?.id
+      if (!user_id) {
+        throw new Error('User ID is undefined')
+      }
       const { error: err } = await supabase
         .from('categories')
         .insert({

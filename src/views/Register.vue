@@ -1,45 +1,50 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { useAuthStore } from '../stores/auth'
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { useAuthStore } from "../stores/auth";
 
-const email = ref('')
-const password = ref('')
-const confirmPassword = ref('')
-const error = ref('')
-const loading = ref(false)
+const email = ref("");
+const password = ref("");
+const confirmPassword = ref("");
+const error = ref("");
+const loading = ref(false);
 
-const router = useRouter()
-const authStore = useAuthStore()
+const router = useRouter();
+const authStore = useAuthStore();
 
 async function handleRegister() {
   try {
     if (password.value !== confirmPassword.value) {
-      error.value = 'Passwords do not match'
-      return
+      error.value = "Passwords do not match";
+      return;
     }
 
-    loading.value = true
-    error.value = ''
-    await authStore.signUp(email.value, password.value)
-    router.push('/')
+    loading.value = true;
+    error.value = "";
+    await authStore.signUp(email.value, password.value);
+    router.push("/");
   } catch (e) {
-    error.value = e.message
+    error.value = (e as Error).message;
   } finally {
-    loading.value = false
+    loading.value = false;
   }
 }
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+  <div
+    class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8"
+  >
     <div class="sm:mx-auto sm:w-full sm:max-w-md">
       <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
         Create a new account
       </h2>
       <p class="mt-2 text-center text-sm text-gray-600">
         Or
-        <router-link to="/login" class="font-medium text-indigo-600 hover:text-indigo-500">
+        <router-link
+          to="/login"
+          class="font-medium text-indigo-600 hover:text-indigo-500"
+        >
           sign in to your account
         </router-link>
       </p>
@@ -68,7 +73,10 @@ async function handleRegister() {
           </div>
 
           <div>
-            <label for="password" class="block text-sm font-medium text-gray-700">
+            <label
+              for="password"
+              class="block text-sm font-medium text-gray-700"
+            >
               Password
             </label>
             <div class="mt-1">
@@ -83,7 +91,10 @@ async function handleRegister() {
           </div>
 
           <div>
-            <label for="confirm-password" class="block text-sm font-medium text-gray-700">
+            <label
+              for="confirm-password"
+              class="block text-sm font-medium text-gray-700"
+            >
               Confirm Password
             </label>
             <div class="mt-1">
@@ -103,7 +114,7 @@ async function handleRegister() {
               :disabled="loading"
               class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
             >
-              {{ loading ? 'Creating account...' : 'Create account' }}
+              {{ loading ? "Creating account..." : "Create account" }}
             </button>
           </div>
         </form>
