@@ -81,6 +81,9 @@ export type Database = {
           date: string
           id: string
           is_personal: boolean | null
+          is_recurring: boolean | null
+          recurring_end_date: string | null
+          recurring_interval: 'weekly' | 'monthly' | 'yearly' | null;
           price: number
           title: string
           user_id: string
