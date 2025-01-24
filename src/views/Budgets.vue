@@ -49,7 +49,9 @@ async function fetchBudgets() {
 
     if (err) throw err;
     if (data.length === 0) {
-      error.value = "Please create at least one budget first";
+      // TODO Translate
+      // TODO magari una modale?
+      error.value = "Prima crea un budget";
       return;
     }
     budgets.value = data.map((budget: any) => ({
@@ -57,7 +59,8 @@ async function fetchBudgets() {
       is_percentage: budget.is_percentage ?? false,
     }));
   } catch (e) {
-    error.value = "Error loading budgets";
+    // TODO Translate
+    error.value = "Errore durante il caricamento dei budget";
     console.error("Error:", e);
   } finally {
     loading.value = false;
@@ -73,12 +76,15 @@ async function fetchCategories() {
 
     if (err) throw err;
     if (data.length === 0) {
-      error.value = "Please create at least one category first";
+      // TODO Translate
+      // TODO magari una modale?
+      error.value = "Prima crea una categoria";
       return;
     }
     categories.value = data;
   } catch (e) {
-    error.value = "Error loading categories";
+    // TODO Translate
+    error.value = "Errore durante il caricamento delle categorie";
     console.error("Error:", e);
   }
 }
@@ -121,11 +127,17 @@ async function handleSubmit() {
         .eq("id", editingBudget.value.id);
 
       if (err) throw err;
-      success.value = "Budget updated successfully";
+      // TODO Translate
+      success.value = "Budget modificato con successo";
     } else {
       const user = await supabase.auth.getUser();
       const user_id = user.data.user?.id;
-      if (!user_id) throw new Error("User not found");
+      // TODO Translate
+      // TODO magari una modale?
+      if (!user_id)
+        throw new Error(
+          "Errore durante la modifica. Prova a ricaricare la pagina"
+        );
 
       const { error: err } = await supabase.from("budgets").insert({
         title: formData.value.title,
@@ -136,29 +148,30 @@ async function handleSubmit() {
       });
 
       if (err) throw err;
-      success.value = "Budget created successfully";
+      success.value = "Budget creato con successo!";
     }
 
     showModal.value = false;
     await fetchBudgets();
   } catch (e) {
-    error.value = "Error saving budget";
+    error.value = "Errore durante il salvataggio del budget";
     console.error("Error:", e);
   }
 }
 
 async function deleteBudget(id: string) {
-  if (!confirm("Are you sure you want to delete this budget?")) return;
+  // TODO modal
+  if (!confirm("Sei sicuro di voler cancellare il budget?")) return;
 
   try {
     error.value = "";
     const { error: err } = await supabase.from("budgets").delete().eq("id", id);
 
     if (err) throw err;
-    success.value = "Budget deleted successfully";
+    success.value = "Budget cancellato con successo!";
     await fetchBudgets();
   } catch (e) {
-    error.value = "Error deleting budget";
+    error.value = "Errore durante la cancellazione";
     console.error("Error:", e);
   }
 }
@@ -174,7 +187,8 @@ onMounted(() => {
     <div class="sm:flex sm:items-center">
       <div class="sm:flex-auto">
         <h1 class="text-2xl font-semibold text-gray-900">Budgets</h1>
-        <p class="mt-2 text-sm text-gray-700">Manage your budget allocations</p>
+        <!-- TODO Translate -->
+        <p class="mt-2 text-sm text-gray-700">Gestisci i tuoi budget</p>
       </div>
       <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
         <button
@@ -183,7 +197,8 @@ onMounted(() => {
           class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white hover:bg-indigo-500"
         >
           <PlusIcon class="h-5 w-5 inline-block mr-1" />
-          Add Budget
+          <!-- TODO Translate -->
+          Aggiungi budget
         </button>
       </div>
     </div>
@@ -200,7 +215,8 @@ onMounted(() => {
 
     <!-- Loading State -->
     <div v-if="loading" class="mt-6 text-center">
-      <div class="text-sm text-gray-500">Loading budgets...</div>
+      <!-- TODO Translate -->
+      <div class="text-sm text-gray-500">Caricamento dei budget...</div>
     </div>
 
     <!-- Budgets Grid -->
@@ -260,7 +276,7 @@ onMounted(() => {
           class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
         >
           <div
-            class="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6"
+            class="relative transform rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6"
           >
             <div class="absolute right-0 top-0 pr-4 pt-4">
               <button
@@ -279,7 +295,8 @@ onMounted(() => {
                     for="title"
                     class="block text-sm font-medium text-gray-700"
                   >
-                    Budget Name
+                    <!-- TODO Translate -->
+                    Nome del budget
                   </label>
                   <input
                     type="text"
@@ -295,7 +312,8 @@ onMounted(() => {
                     for="category"
                     class="block text-sm font-medium text-gray-700"
                   >
-                    Category
+                    <!-- TODO Translate -->
+                    Categoria
                   </label>
                   <select
                     id="category"
@@ -318,7 +336,8 @@ onMounted(() => {
                     for="amount"
                     class="block text-sm font-medium text-gray-700"
                   >
-                    Amount
+                    <!-- TODO Translate -->
+                    Valore
                   </label>
                   <div class="relative mt-1 rounded-md shadow-sm">
                     <div
@@ -351,11 +370,16 @@ onMounted(() => {
                     />
                   </div>
                   <div class="ml-3 text-sm leading-6">
-                    <label for="is_percentage" class="font-medium text-gray-900"
-                      >Percentage based</label
+                    <label
+                      for="is_percentage"
+                      class="font-medium text-gray-900"
+                    >
+                    <!-- TODO Translate -->
+                      Percentuale</label
                     >
                     <p class="text-gray-500">
-                      Set budget as a percentage of total income
+                      <!-- TODO Translate -->
+                      Imposta il valore come percentuale
                     </p>
                   </div>
                 </div>

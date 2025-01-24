@@ -7,6 +7,7 @@ import {
   PencilSquareIcon,
   TrashIcon,
   XMarkIcon,
+  ArrowPathIcon,
 } from "@heroicons/vue/24/outline";
 
 interface Payment {
@@ -16,6 +17,9 @@ interface Payment {
   date: string;
   category_id: string;
   is_personal: boolean;
+  is_recurring: boolean;
+  recurring_end_date: string | null;
+  recurring_interval: "weekly" | "monthly" | "yearly" | null;
 }
 
 interface Category {
@@ -38,7 +42,16 @@ const formData = ref({
   date: format(new Date(), "yyyy-MM-dd"),
   category_id: "",
   is_personal: false,
+  is_recurring: false,
+  recurring_end_date: "",
+  recurring_interval: null as "weekly" | "monthly" | "yearly" | null,
 });
+
+const recurringIntervals = [
+  { value: "weekly", label: "Weekly" },
+  { value: "monthly", label: "Monthly" },
+  { value: "yearly", label: "Yearly" },
+];
 
 async function fetchPayments() {
   try {
@@ -54,6 +67,7 @@ async function fetchPayments() {
     payments.value = data.map((payment) => ({
       ...payment,
       is_personal: payment.is_personal ?? false,
+      is_recurring: payment.is_recurring ?? false,
     }));
   } catch (e) {
     error.value = "Error loading payments";
@@ -90,6 +104,9 @@ function openModal(payment: Payment | null = null) {
       date: payment.date,
       category_id: payment.category_id,
       is_personal: payment.is_personal,
+      is_recurring: payment.is_recurring,
+      recurring_end_date: payment.recurring_end_date || "",
+      recurring_interval: payment.recurring_interval,
     };
   } else {
     editingPayment.value = null;
@@ -99,6 +116,9 @@ function openModal(payment: Payment | null = null) {
       date: format(new Date(), "yyyy-MM-dd"),
       category_id: categories.value[0]?.id || "",
       is_personal: false,
+      is_recurring: false,
+      recurring_end_date: "",
+      recurring_interval: null,
     };
   }
   showModal.value = true;
@@ -109,16 +129,31 @@ async function handleSubmit() {
     error.value = "";
     success.value = "";
 
+    // Validate recurring payment data
+    if (formData.value.is_recurring && !formData.value.recurring_interval) {
+      error.value = "Please select a recurring interval";
+      return;
+    }
+
+    const paymentData = {
+      title: formData.value.title,
+      price: formData.value.price,
+      date: formData.value.date,
+      category_id: formData.value.category_id,
+      is_personal: formData.value.is_personal,
+      is_recurring: formData.value.is_recurring,
+      recurring_end_date: formData.value.is_recurring
+        ? formData.value.recurring_end_date || null
+        : null,
+      recurring_interval: formData.value.is_recurring
+        ? formData.value.recurring_interval
+        : null,
+    };
+
     if (editingPayment.value) {
       const { error: err } = await supabase
         .from("payments")
-        .update({
-          title: formData.value.title,
-          price: formData.value.price,
-          date: formData.value.date,
-          category_id: formData.value.category_id,
-          is_personal: formData.value.is_personal,
-        })
+        .update(paymentData)
         .eq("id", editingPayment.value.id);
 
       if (err) throw err;
@@ -129,11 +164,7 @@ async function handleSubmit() {
       if (!user.data.user) throw new Error("User data is not available");
 
       const { error: err } = await supabase.from("payments").insert({
-        title: formData.value.title,
-        price: formData.value.price,
-        date: formData.value.date,
-        category_id: formData.value.category_id,
-        is_personal: formData.value.is_personal,
+        ...paymentData,
         user_id: user.data.user.id,
       });
 
@@ -250,6 +281,12 @@ onMounted(() => {
                   >
                     Personal
                   </th>
+                  <th
+                    scope="col"
+                    class="px-3 py-3.5 text-center text-sm font-semibold text-gray-900"
+                  >
+                    Recurring
+                  </th>
                   <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
                     <span class="sr-only">Actions</span>
                   </th>
@@ -287,6 +324,16 @@ onMounted(() => {
                     >
                       {{ payment.is_personal ? "Yes" : "No" }}
                     </span>
+                  </td>
+                  <td class="whitespace-nowrap px-3 py-4 text-sm text-center">
+                    <span
+                      v-if="payment.is_recurring"
+                      class="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800"
+                    >
+                      <ArrowPathIcon class="h-3 w-3 mr-1" />
+                      {{ payment.recurring_interval }}
+                    </span>
+                    <span v-else class="text-gray-500">-</span>
                   </td>
                   <td
                     class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6"
@@ -412,7 +459,7 @@ onMounted(() => {
                     for="date"
                     class="block text-sm font-medium text-gray-700"
                   >
-                    Date
+                    Start Date
                   </label>
                   <input
                     type="date"
@@ -421,6 +468,67 @@ onMounted(() => {
                     required
                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   />
+                </div>
+
+                <div class="relative flex items-start">
+                  <div class="flex h-6 items-center">
+                    <input
+                      id="is_recurring"
+                      v-model="formData.is_recurring"
+                      type="checkbox"
+                      class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                    />
+                  </div>
+                  <div class="ml-3 text-sm leading-6">
+                    <label for="is_recurring" class="font-medium text-gray-900"
+                      >Recurring payment</label
+                    >
+                    <p class="text-gray-500">
+                      This payment will repeat at regular intervals
+                    </p>
+                  </div>
+                </div>
+
+                <div v-if="formData.is_recurring" class="space-y-4">
+                  <div>
+                    <label
+                      for="recurring_interval"
+                      class="block text-sm font-medium text-gray-700"
+                    >
+                      Recurring Interval
+                    </label>
+                    <select
+                      id="recurring_interval"
+                      v-model="formData.recurring_interval"
+                      required
+                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    >
+                      <option value="">Select interval</option>
+                      <option
+                        v-for="interval in recurringIntervals"
+                        :key="interval.value"
+                        :value="interval.value"
+                      >
+                        {{ interval.label }}
+                      </option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label
+                      for="recurring_end_date"
+                      class="block text-sm font-medium text-gray-700"
+                    >
+                      End Date (Optional)
+                    </label>
+                    <input
+                      type="date"
+                      id="recurring_end_date"
+                      v-model="formData.recurring_end_date"
+                      :min="formData.date"
+                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    />
+                  </div>
                 </div>
 
                 <div class="relative flex items-start">

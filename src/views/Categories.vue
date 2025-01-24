@@ -1,6 +1,14 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { supabase } from "../supabase/client";
+import {
+  PlusIcon,
+  PencilSquareIcon,
+  TrashIcon,
+  XMarkIcon,
+  ExclamationTriangleIcon
+} from '@heroicons/vue/24/outline'
+import { isNumber } from "chart.js/helpers";
 
 interface Category {
   id: string;
@@ -25,6 +33,7 @@ const formData = ref({
   color: "#3B82F6",
 });
 
+// Creare icon picker
 const icons = [
   "🏠",
   "🚗",
@@ -39,6 +48,8 @@ const icons = [
   "💪",
   "📱",
 ];
+
+// Create color picker
 const colors = [
   "#3B82F6", // Blue
   "#EF4444", // Red
@@ -120,12 +131,17 @@ async function handleSubmit() {
         .eq("id", editingCategory.value.id);
 
       if (err) throw err;
-      success.value = "Category updated successfully";
+      // TODO Translate
+      success.value = "Categoria modificata con successo";
     } else {
       const user = await supabase.auth.getUser();
       const user_id = user.data.user?.id;
-      
-      if (!user_id) throw new Error("User not found");
+      // TODO Translate
+      // TODO Modal
+      if (!user_id)
+        throw new Error(
+          "Errore durante il salvataggio. Prova a ricaricare la pagina"
+        );
 
       const { error: err } = await supabase.from("categories").insert({
         title: formData.value.title,
@@ -135,14 +151,17 @@ async function handleSubmit() {
       });
 
       if (err) throw err;
-      success.value = "Category created successfully";
+      // TODO Translate
+      success.value = "Categoria creata con successo";
     }
 
     closeModal();
     await fetchCategories();
   } catch (e) {
-    console.error("Error saving category:", e);
-    error.value = "Unable to save category. Please try again.";
+    // TODO Translate
+    console.error("Errore durante il salvataggio della categoria:", e);
+    // TODO Translate
+    error.value = "Errore durante il salvataggio. Riprovare più tardi";
   }
 }
 
@@ -166,8 +185,10 @@ async function checkCategoryUsage(id: string) {
 
     return { paymentsCount, budgetsCount };
   } catch (e) {
-    console.error("Error checking category usage:", e);
-    throw new Error("Unable to check if category can be deleted");
+    // TODO Translate
+    console.error("Errore durante la verifica dei budget:", e);
+    // TODO Translate
+    throw new Error("Non sono riuscito a ");
   }
 }
 
@@ -179,20 +200,18 @@ async function openDeleteModal(category: Category) {
     const { paymentsCount, budgetsCount } = await checkCategoryUsage(
       category.id
     );
-
     if (
-      !paymentsCount ||
-      !budgetsCount ||
-      paymentsCount > 0 ||
-      budgetsCount > 0
+      (!isNumber(paymentsCount) || !isNumber(budgetsCount)) || (paymentsCount > 0 || budgetsCount > 0)
     ) {
-      deleteError.value = `This category cannot be deleted because it is being used in ${paymentsCount} payment(s) and ${budgetsCount} budget(s)`;
+      deleteError.value = `Questa categoria non può essere cancellata perchè ci sono associati ${paymentsCount} pagamenti e ${budgetsCount} budget`;
     }
 
     showDeleteModal.value = true;
   } catch (e) {
     console.error("Error checking category usage:", e);
-    error.value = "Unable to check if category can be deleted";
+    // TODO Translate
+    error.value =
+      "Impossibile verificare se è possibile cancellare la categoria";
   }
 }
 
@@ -206,14 +225,16 @@ async function handleDelete() {
       .eq("id", deletingCategory.value.id);
 
     if (err) throw err;
-
-    success.value = "Category deleted successfully";
+    // TODO Translate
+    success.value = "Categoria cancellata con successo";
     showDeleteModal.value = false;
     deletingCategory.value = null;
     await fetchCategories();
   } catch (e) {
-    console.error("Error deleting category:", e);
-    error.value = "Unable to delete category. Please try again.";
+    // TODO Translate
+    console.error("Errore durante la cancellazione della categoria:", e);
+    // TODO Translate
+    error.value = "Impossibile cancellare la categoria. Riprova più tardi";
   }
 }
 
@@ -226,8 +247,8 @@ onMounted(() => {
   <div>
     <div class="sm:flex sm:items-center">
       <div class="sm:flex-auto">
-        <h1 class="text-2xl font-semibold text-gray-900">Categories</h1>
-        <p class="mt-2 text-sm text-gray-700">Manage your expense categories</p>
+        <h1 class="text-2xl font-semibold text-gray-900">Categorie</h1>
+        <p class="mt-2 text-sm text-gray-700">Configura le tue categorie per i pagamenti e i budget</p>
       </div>
       <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
         <button
@@ -236,7 +257,7 @@ onMounted(() => {
           class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white hover:bg-indigo-500"
         >
           <PlusIcon class="h-5 w-5 inline-block mr-1" />
-          Add Category
+          Aggiungi categoria
         </button>
       </div>
     </div>
@@ -253,7 +274,7 @@ onMounted(() => {
 
     <!-- Loading State -->
     <div v-if="loading" class="mt-6 text-center">
-      <div class="text-sm text-gray-500">Loading categories...</div>
+      <div class="text-sm text-gray-500">Caricamento categoria...</div>
     </div>
 
     <!-- Categories Grid -->
@@ -328,7 +349,7 @@ onMounted(() => {
                     for="title"
                     class="block text-sm font-medium text-gray-700"
                   >
-                    Category Name
+                    Nome
                   </label>
                   <input
                     type="text"
@@ -341,9 +362,10 @@ onMounted(() => {
 
                 <div>
                   <label class="block text-sm font-medium text-gray-700"
-                    >Icon</label
+                    >Icona</label
                   >
                   <div class="mt-2 grid grid-cols-6 gap-2">
+                    <!-- TODO Icon Picker -->
                     <button
                       v-for="icon in icons"
                       :key="icon"
@@ -363,9 +385,10 @@ onMounted(() => {
 
                 <div>
                   <label class="block text-sm font-medium text-gray-700"
-                    >Color</label
+                    >Colore</label
                   >
                   <div class="mt-2 grid grid-cols-6 gap-2">
+                    <!-- TODO Color Picker -->
                     <button
                       v-for="color in colors"
                       :key="color"
@@ -389,13 +412,13 @@ onMounted(() => {
                   @click="closeModal"
                   class="inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                 >
-                  Cancel
+                  Cancella
                 </button>
                 <button
                   type="submit"
                   class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
-                  {{ editingCategory ? "Update" : "Create" }} Category
+                  {{ editingCategory ? "Update" : "Create" }} Categoria
                 </button>
               </div>
             </form>
