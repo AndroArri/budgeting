@@ -74,6 +74,33 @@ export type Database = {
         }
         Relationships: []
       }
+      incomes: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_personal: boolean | null
+          price: number
+          title: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_personal?: boolean | null
+          price: number
+          title: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_personal?: boolean | null
+          price?: number
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       payments: {
         Row: {
           category_id: string
@@ -82,9 +109,9 @@ export type Database = {
           id: string
           is_personal: boolean | null
           is_recurring: boolean | null
-          recurring_end_date: string | null
-          recurring_interval: 'weekly' | 'monthly' | 'yearly' | null;
           price: number
+          recurring_end_date: string | null
+          recurring_interval: string | null
           title: string
           user_id: string
         }
@@ -94,7 +121,10 @@ export type Database = {
           date: string
           id?: string
           is_personal?: boolean | null
+          is_recurring?: boolean | null
           price: number
+          recurring_end_date?: string | null
+          recurring_interval?: string | null
           title: string
           user_id: string
         }
@@ -104,7 +134,10 @@ export type Database = {
           date?: string
           id?: string
           is_personal?: boolean | null
+          is_recurring?: boolean | null
           price?: number
+          recurring_end_date?: string | null
+          recurring_interval?: string | null
           title?: string
           user_id?: string
         }
