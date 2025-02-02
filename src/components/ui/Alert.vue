@@ -1,0 +1,29 @@
+<template>
+    <div v-if="show" :class="[
+      'rounded-md p-4',
+      variant === 'success' && 'bg-green-50',
+      variant === 'error' && 'bg-red-50',
+      variant === 'warning' && 'bg-yellow-50',
+      variant === 'info' && 'bg-blue-50'
+    ]">
+      <div :class="[
+        'text-sm',
+        variant === 'success' && 'text-green-700',
+        variant === 'error' && 'text-red-700',
+        variant === 'warning' && 'text-yellow-700',
+        variant === 'info' && 'text-blue-700'
+      ]">
+        <slot></slot>
+      </div>
+    </div>
+  </template>
+  
+  <script setup lang="ts">
+  withDefaults(defineProps<{
+    show?: boolean
+    variant?: 'success' | 'error' | 'warning' | 'info'
+  }>(), {
+    show: true,
+    variant: 'info'
+  })
+  </script>
