@@ -374,7 +374,7 @@ onMounted(() => {
                       for="is_percentage"
                       class="font-medium text-gray-900"
                     >
-                    <!-- TODO Translate -->
+                      <!-- TODO Translate -->
                       Percentuale</label
                     >
                     <p class="text-gray-500">

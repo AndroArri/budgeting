@@ -68,6 +68,12 @@ async function fetchPayments() {
       ...payment,
       is_personal: payment.is_personal ?? false,
       is_recurring: payment.is_recurring ?? false,
+      recurring_interval:
+        (payment.recurring_interval as
+          | "weekly"
+          | "monthly"
+          | "yearly"
+          | null) ?? null,
     }));
   } catch (e) {
     error.value = "Error loading payments";

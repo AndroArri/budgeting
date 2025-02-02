@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
-import { supabase } from '../supabase/client'
-import { format, startOfMonth, endOfMonth, subMonths } from 'date-fns'
-import { Line, Doughnut, Bar } from 'vue-chartjs'
+import { ref, onMounted, computed } from "vue";
+import { supabase } from "../supabase/client";
+import { format, startOfMonth, endOfMonth, subMonths } from "date-fns";
+import { Line, Doughnut, Bar } from "vue-chartjs";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -13,8 +13,8 @@ import {
   Tooltip,
   Legend,
   ArcElement,
-  BarElement
-} from 'chart.js'
+  BarElement,
+} from "chart.js";
 
 ChartJS.register(
   CategoryScale,
@@ -26,188 +26,194 @@ ChartJS.register(
   Tooltip,
   Legend,
   ArcElement
-)
+);
 
 interface Payment {
-  id: string
-  title: string
-  price: number
-  date: string
-  category_id: string
+  id: string;
+  title: string;
+  price: number;
+  date: string;
+  category_id: string;
 }
 
 interface Category {
-  id: string
-  title: string
-  color: string
+  id: string;
+  title: string;
+  color: string;
 }
 
 interface Budget {
-  id: string
-  title: string
-  amount: number
-  category_id: string
-  is_percentage: boolean
+  id: string;
+  title: string;
+  amount: number;
+  category_id: string;
+  is_percentage: boolean;
 }
 
-const payments = ref<Payment[]>([])
-const categories = ref<Category[]>([])
-const budgets = ref<Budget[]>([])
-const loading = ref(true)
-const error = ref('')
+const payments = ref<Payment[]>([]);
+const categories = ref<Category[]>([]);
+const budgets = ref<Budget[]>([]);
+const loading = ref(true);
+const error = ref("");
 
 // Get last 6 months of data
 const monthlyData = computed(() => {
-  const months: { [key: string]: number } = {}
-  const today = new Date()
-  
+  const months: { [key: string]: number } = {};
+  const today = new Date();
+
   // Initialize last 6 months with 0
   for (let i = 5; i >= 0; i--) {
-    const month = subMonths(today, i)
-    months[format(month, 'MMM yyyy')] = 0
+    const month = subMonths(today, i);
+    months[format(month, "MMM yyyy")] = 0;
   }
 
   // Sum payments by month
-  payments.value.forEach(payment => {
-    const month = format(new Date(payment.date), 'MMM yyyy')
+  payments.value.forEach((payment) => {
+    const month = format(new Date(payment.date), "MMM yyyy");
     if (months[month] !== undefined) {
-      months[month] += Number(payment.price)
+      months[month] += Number(payment.price);
     }
-  })
+  });
 
   return {
     labels: Object.keys(months),
-    datasets: [{
-      label: 'Monthly Expenses',
-      data: Object.values(months),
-      borderColor: '#4F46E5',
-      backgroundColor: '#4F46E520',
-      fill: true
-    }]
-  }
-})
+    datasets: [
+      {
+        label: "Monthly Expenses",
+        data: Object.values(months),
+        borderColor: "#4F46E5",
+        backgroundColor: "#4F46E520",
+        fill: true,
+      },
+    ],
+  };
+});
 
 const categoryData = computed(() => {
-  const categoryTotals: { [key: string]: number } = {}
-  const categoryColors: { [key: string]: string } = {}
+  const categoryTotals: { [key: string]: number } = {};
+  const categoryColors: { [key: string]: string } = {};
 
-  categories.value.forEach(category => {
-    categoryTotals[category.title] = 0
-    categoryColors[category.title] = category.color
-  })
+  categories.value.forEach((category) => {
+    categoryTotals[category.title] = 0;
+    categoryColors[category.title] = category.color;
+  });
 
-  payments.value.forEach(payment => {
-    const category = categories.value.find(c => c.id === payment.category_id)
+  payments.value.forEach((payment) => {
+    const category = categories.value.find((c) => c.id === payment.category_id);
     if (category) {
-      categoryTotals[category.title] = (categoryTotals[category.title] || 0) + Number(payment.price)
+      categoryTotals[category.title] =
+        (categoryTotals[category.title] || 0) + Number(payment.price);
     }
-  })
+  });
 
   return {
     labels: Object.keys(categoryTotals),
-    datasets: [{
-      data: Object.values(categoryTotals),
-      backgroundColor: Object.values(categoryColors)
-    }]
-  }
-})
+    datasets: [
+      {
+        data: Object.values(categoryTotals),
+        backgroundColor: Object.values(categoryColors),
+      },
+    ],
+  };
+});
 
 const budgetData = computed(() => {
-  const budgetStatus: { [key: string]: { budget: number, spent: number } } = {}
+  const budgetStatus: { [key: string]: { budget: number; spent: number } } = {};
 
   // Initialize budget status
-  budgets.value.forEach(budget => {
-    const category = categories.value.find(c => c.id === budget.category_id)
+  budgets.value.forEach((budget) => {
+    const category = categories.value.find((c) => c.id === budget.category_id);
     if (category) {
       budgetStatus[category.title] = {
         budget: Number(budget.amount),
-        spent: 0
-      }
+        spent: 0,
+      };
     }
-  })
+  });
 
   // Calculate spent amount for current month
-  const startMonth = startOfMonth(new Date())
-  const endMonth = endOfMonth(new Date())
+  const startMonth = startOfMonth(new Date());
+  const endMonth = endOfMonth(new Date());
 
-  payments.value.forEach(payment => {
-    const paymentDate = new Date(payment.date)
+  payments.value.forEach((payment) => {
+    const paymentDate = new Date(payment.date);
     if (paymentDate >= startMonth && paymentDate <= endMonth) {
-      const category = categories.value.find(c => c.id === payment.category_id)
+      const category = categories.value.find(
+        (c) => c.id === payment.category_id
+      );
       if (category && budgetStatus[category.title]) {
-        budgetStatus[category.title].spent += Number(payment.price)
+        budgetStatus[category.title].spent += Number(payment.price);
       }
     }
-  })
+  });
 
   return {
     labels: Object.keys(budgetStatus),
     datasets: [
       {
-        label: 'Budget',
-        data: Object.values(budgetStatus).map(status => status.budget),
-        backgroundColor: '#4F46E5'
+        label: "Budget",
+        data: Object.values(budgetStatus).map((status) => status.budget),
+        backgroundColor: "#4F46E5",
       },
       {
-        label: 'Spent',
-        data: Object.values(budgetStatus).map(status => status.spent),
-        backgroundColor: '#EF4444'
-      }
-    ]
-  }
-})
+        label: "Spent",
+        data: Object.values(budgetStatus).map((status) => status.spent),
+        backgroundColor: "#EF4444",
+      },
+    ],
+  };
+});
 
 const chartOptions = {
   responsive: true,
-  maintainAspectRatio: false
-}
+  maintainAspectRatio: false,
+};
 
 async function fetchData() {
   try {
-    loading.value = true
-    error.value = ''
+    loading.value = true;
+    error.value = "";
 
     // Fetch categories
     const { data: categoriesData, error: categoriesError } = await supabase
-      .from('categories')
-      .select('*')
-    
-    if (categoriesError) throw categoriesError
-    categories.value = categoriesData
+      .from("categories")
+      .select("*");
+
+    if (categoriesError) throw categoriesError;
+    categories.value = categoriesData;
 
     // Fetch payments for last 6 months
-    const sixMonthsAgo = subMonths(new Date(), 6)
+    const sixMonthsAgo = subMonths(new Date(), 6);
     const { data: paymentsData, error: paymentsError } = await supabase
-      .from('payments')
-      .select('*')
-      .gte('date', format(sixMonthsAgo, 'yyyy-MM-dd'))
-      .order('date', { ascending: true })
-    
-    if (paymentsError) throw paymentsError
-    payments.value = paymentsData
+      .from("payments")
+      .select("*")
+      .gte("date", format(sixMonthsAgo, "yyyy-MM-dd"))
+      .order("date", { ascending: true });
+
+    if (paymentsError) throw paymentsError;
+    payments.value = paymentsData;
 
     // Fetch budgets
     const { data: budgetsData, error: budgetsError } = await supabase
-      .from('budgets')
-      .select('*')
-    
-    if (budgetsError) throw budgetsError
-    budgets.value = budgetsData.map(budget => ({
-      ...budget,
-      is_percentage: budget.is_percentage ?? false
-    }))
+      .from("budgets")
+      .select("*");
 
+    if (budgetsError) throw budgetsError;
+    budgets.value = budgetsData.map((budget) => ({
+      ...budget,
+      is_percentage: budget.is_percentage ?? false,
+    }));
   } catch (e) {
-    error.value = 'Error loading dashboard data'
-    console.error('Error:', e)
+    error.value = "Error loading dashboard data";
+    console.error("Error:", e);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
 }
 
 onMounted(() => {
-  fetchData()
-})
+  fetchData();
+});
 </script>
 
 <template>
@@ -236,7 +242,9 @@ onMounted(() => {
 
       <!-- Expenses by Category Chart -->
       <div class="bg-white p-6 rounded-lg shadow">
-        <h2 class="text-lg font-medium text-gray-900 mb-4">Expenses by Category</h2>
+        <h2 class="text-lg font-medium text-gray-900 mb-4">
+          Expenses by Category
+        </h2>
         <div class="h-80">
           <Doughnut :data="categoryData" :options="chartOptions" />
         </div>
@@ -244,7 +252,9 @@ onMounted(() => {
 
       <!-- Budget Status Chart -->
       <div class="bg-white p-6 rounded-lg shadow lg:col-span-2">
-        <h2 class="text-lg font-medium text-gray-900 mb-4">Budget Status (Current Month)</h2>
+        <h2 class="text-lg font-medium text-gray-900 mb-4">
+          Budget Status (Current Month)
+        </h2>
         <div class="h-80">
           <Bar :data="budgetData" :options="chartOptions" />
         </div>
