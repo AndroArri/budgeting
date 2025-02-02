@@ -20,6 +20,7 @@
           :step="step"
           :class="[
             'w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300',
+            disabled ? 'bg-gray-200 cursor-not-allowed' : ''
             prefix && 'pl-10',
             disabled && 'bg-gray-100 cursor-not-allowed',
             error && 'border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500'
