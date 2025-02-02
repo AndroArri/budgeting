@@ -19,7 +19,7 @@
           :max="max"
           :step="step"
           :class="[
-            'block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm',
+            'w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300',
             prefix && 'pl-7',
             disabled && 'bg-gray-100 cursor-not-allowed',
             error && 'border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500'
