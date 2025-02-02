@@ -10,10 +10,12 @@ import {
   UserIcon,
   Bars3Icon,
   XMarkIcon,
+  BanknotesIcon,
 } from "@heroicons/vue/24/outline";
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: HomeIcon },
+  { name: "Income", href: "/income", icon: BanknotesIcon },
   { name: "Payments", href: "/payments", icon: CreditCardIcon },
   { name: "Categories", href: "/categories", icon: TagIcon },
   { name: "Budgets", href: "/budgets", icon: ChartPieIcon },
