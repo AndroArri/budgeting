@@ -368,50 +368,26 @@ onMounted(() => {
     </div>
 
     <!-- Modal -->
-    <div
-      v-if="showModal"
-      class="relative z-50"
-      aria-labelledby="modal-title"
-      role="dialog"
-      aria-modal="true"
+    <Modal
+      v-model="showModal"
+      :title="editingPayment ? 'Modifica Pagamento' : 'Aggiungi Pagamento'"
     >
-      <div
-        class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
-      ></div>
-
-      <div class="fixed inset-0 z-50 overflow-y-auto">
-        <div
-          class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
-        >
-          <div
-            class="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6"
-          >
-            <div class="absolute right-0 top-0 pr-4 pt-4">
-              <button
-                type="button"
-                @click="showModal = false"
-                class="rounded-md bg-white text-gray-400 hover:text-gray-500"
-              >
-                <XMarkIcon class="h-6 w-6" />
-              </button>
-            </div>
-
-            <form @submit.prevent="handleSubmit">
-              <div class="space-y-4">
-                <div>
-                  <label
-                    for="title"
-                    class="block text-sm font-medium text-gray-700"
-                  >
-                    Titolo
-                  </label>
-                  <Input
-                    type="text"
-                    id="title"
-                    v-model="formData.title"
-                    required
-                  />
-                </div>
+      <form @submit.prevent="handleSubmit">
+        <div class="space-y-4">
+          <div>
+            <label
+              for="title"
+              class="block text-sm font-medium text-gray-700"
+            >
+              Titolo
+            </label>
+            <Input
+              type="text"
+              id="title"
+              v-model="formData.title"
+              required
+            />
+          </div>
 
                 <div>
                   <label
