@@ -78,7 +78,7 @@ async function fetchPayments() {
           | null) ?? null,
     }));
   } catch (e) {
-    error.value = "Error loading payments";
+    error.value = "Errore nel caricamento dei pagamenti";
     console.error("Error:", e);
   } finally {
     loading.value = false;
@@ -165,7 +165,7 @@ async function handleSubmit() {
         .eq("id", editingPayment.value.id);
 
       if (err) throw err;
-      success.value = "Payment updated successfully";
+      success.value = "Pagamento aggiornato con successo";
     } else {
       const user = await supabase.auth.getUser();
       if (!user) throw new Error("User is not authenticated");
@@ -177,19 +177,19 @@ async function handleSubmit() {
       });
 
       if (err) throw err;
-      success.value = "Payment created successfully";
+      success.value = "Pagamento creato con successo";
     }
 
     showModal.value = false;
     await fetchPayments();
   } catch (e) {
-    error.value = "Error saving payment";
+    error.value = "Errore nel salvataggio del pagamento";
     console.error("Error:", e);
   }
 }
 
 async function deletePayment(id: string) {
-  if (!confirm("Are you sure you want to delete this payment?")) return;
+  if (!confirm("Sei sicuro di voler eliminare questo pagamento?")) return;
 
   try {
     error.value = "";
@@ -199,10 +199,10 @@ async function deletePayment(id: string) {
       .eq("id", id);
 
     if (err) throw err;
-    success.value = "Payment deleted successfully";
+    success.value = "Pagamento eliminato con successo";
     await fetchPayments();
   } catch (e) {
-    error.value = "Error deleting payment";
+    error.value = "Errore nell'eliminazione del pagamento";
     console.error("Error:", e);
   }
 }
@@ -229,7 +229,7 @@ onMounted(() => {
           class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white hover:bg-indigo-500"
         >
           <PlusIcon class="h-5 w-5 inline-block mr-1" />
-          Add Payment
+          Aggiungi Pagamento
         </button>
       </div>
     </div>
@@ -246,7 +246,7 @@ onMounted(() => {
 
     <!-- Loading State -->
     <div v-if="loading" class="mt-6 text-center">
-      <div class="text-sm text-gray-500">Loading payments...</div>
+      <div class="text-sm text-gray-500">Caricamento pagamenti...</div>
     </div>
 
     <!-- Payments Table -->
@@ -557,7 +557,7 @@ onMounted(() => {
                   type="submit"
                   class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
-                  {{ editingPayment ? "Update" : "Create" }} Payment
+                  {{ editingPayment ? "Aggiorna" : "Crea" }} Pagamento
                 </button>
               </div>
             </form>

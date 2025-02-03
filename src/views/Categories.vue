@@ -327,7 +327,7 @@ onMounted(() => {
         <Button @click="handleSubmit" variant="primary" class="ml-3">
           {{ editingCategory ? "Aggiorna" : "Crea" }} Categoria
         </Button>
-        <Button @click="showModal = false" variant="secondary"> Cancel </Button>
+        <Button @click="showModal = false" variant="secondary"> Annulla </Button>
       </template>
     </Modal>
 
