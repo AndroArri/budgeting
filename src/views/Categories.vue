@@ -117,7 +117,7 @@ async function handleSubmit() {
         .eq("id", editingCategory.value.id);
 
       if (err) throw err;
-      success.value = "Category updated successfully";
+      success.value = "Categoria aggiornata con successo";
     } else {
       const user = await supabase.auth.getUser();
       const user_id = user.data.user?.id;
@@ -131,14 +131,14 @@ async function handleSubmit() {
       });
 
       if (err) throw err;
-      success.value = "Category created successfully";
+      success.value = "Categoria creata con successo";
     }
 
     showModal.value = false;
     await fetchCategories();
   } catch (e) {
     console.error("Error saving category:", e);
-    error.value = "Error saving category. Please try again later.";
+    error.value = "Errore nel salvare la categoria. Per favore riprova più tardi.";
   }
 }
 
@@ -200,7 +200,7 @@ async function handleDelete() {
     await fetchCategories();
   } catch (e) {
     console.error("Error deleting category:", e);
-    error.value = "Unable to delete category. Please try again later.";
+    error.value = "Impossibile eliminare la categoria. Per favore riprova più tardi.";
   }
 }
 
@@ -213,9 +213,9 @@ onMounted(() => {
   <div>
     <div class="sm:flex sm:items-center">
       <div class="sm:flex-auto">
-        <h1 class="text-2xl font-semibold text-gray-900">Categories</h1>
+        <h1 class="text-2xl font-semibold text-gray-900">Categorie</h1>
         <p class="mt-2 text-sm text-gray-700">
-          Configure your categories for payments and budgets
+          Configura le tue categorie per pagamenti e budget
         </p>
       </div>
       <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
@@ -223,7 +223,7 @@ onMounted(() => {
           <template #icon-left>
             <PlusIcon class="h-5 w-5 inline-block mr-1" />
           </template>
-          Categoria
+          Aggiungi Categoria
         </Button>
       </div>
     </div>
@@ -237,7 +237,7 @@ onMounted(() => {
     </Alert>
 
     <div v-if="loading" class="mt-6 text-center">
-      <div class="text-sm text-gray-500">Loading categories...</div>
+      <div class="text-sm text-gray-500">Caricamento categorie...</div>
     </div>
 
     <div
@@ -281,21 +281,21 @@ onMounted(() => {
     <!-- Edit Modal -->
     <Modal
       v-model="showModal"
-      :title="editingCategory ? 'Edit Category' : 'Add Category'"
+      :title="editingCategory ? 'Modifica Categoria' : 'Aggiungi Categoria'"
     >
       <div class="space-y-4">
         <form @submit.prevent="handleSubmit" @input="formatAmount">
-          <Input v-model="formData.title" label="Name" required />
+          <Input v-model="formData.title" label="Nome" required />
 
           <div>
-            <label class="block text-sm font-medium text-gray-700">Icon</label>
+            <label class="block text-sm font-medium text-gray-700">Icona</label>
             <div class="mt-2">
               <IconPicker v-model="formData.icon" />
             </div>
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700">Color</label>
+            <label class="block text-sm font-medium text-gray-700">Colore</label>
             <div class="mt-2 grid grid-cols-6 gap-2">
               <Button
                 v-for="color in colors"
@@ -313,19 +313,19 @@ onMounted(() => {
             </div>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700">Recurring Interval</label>
-            <Select v-model="formData.recurringInterval" placeholder="Select interval">
-              <option value="daily">Daily</option>
-              <option value="weekly">Weekly</option>
-              <option value="monthly">Monthly</option>
-              <option value="yearly">Yearly</option>
+            <label class="block text-sm font-medium text-gray-700">Intervallo Ricorrente</label>
+            <Select v-model="formData.recurringInterval" placeholder="Seleziona intervallo">
+              <option value="daily">Giornaliero</option>
+              <option value="weekly">Settimanale</option>
+              <option value="monthly">Mensile</option>
+              <option value="yearly">Annuale</option>
             </Select>
           </div>
         </form>
       </div>
       <template #footer>
         <Button @click="handleSubmit" variant="primary" class="ml-3">
-          {{ editingCategory ? "Update" : "Create" }} Category
+          {{ editingCategory ? "Aggiorna" : "Crea" }} Categoria
         </Button>
         <Button @click="showModal = false" variant="secondary"> Cancel </Button>
       </template>
@@ -340,9 +340,9 @@ onMounted(() => {
       iconBackgroundClass="bg-red-100"
     >
       <p class="text-sm text-gray-500">
-        Are you sure you want to delete the category "{{
+        Sei sicuro di voler eliminare la categoria "{{
           deletingCategory?.title
-        }}"? This action cannot be undone.
+        }}"? Questa azione non può essere annullata.
       </p>
       <div v-if="deleteError" class="mt-2 text-sm text-red-600">
         {{ deleteError }}
