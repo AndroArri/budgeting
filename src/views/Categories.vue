@@ -9,6 +9,7 @@ import {
 
 import Button from "../components/ui/Button.vue";
 import Input from "../components/ui/Input.vue";
+import Select from "../components/ui/Select.vue";
 import Modal from "../components/ui/Modal.vue";
 import Alert from "../components/ui/Alert.vue";
 import IconPicker from "../components/ui/IconPicker.vue";
@@ -35,6 +36,7 @@ const formData = ref({
   icon: "Home",
   color: "#3B82F6",
   amount: "",
+  recurringInterval: "",
 });
 
 function formatAmount() {
@@ -307,6 +309,15 @@ onMounted(() => {
                 :style="{ backgroundColor: color }"
               />
             </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Recurring Interval</label>
+            <Select v-model="formData.recurringInterval" placeholder="Select interval">
+              <option value="daily">Daily</option>
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+              <option value="yearly">Yearly</option>
+            </Select>
           </div>
         </form>
       </div>
