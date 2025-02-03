@@ -23,16 +23,16 @@ import { useToast } from 'vue-toast-notification';
 
 const toast = useToast();
 
-withDefaults(defineProps<{
-  show?: boolean
-  variant?: 'success' | 'error' | 'warning' | 'info',
-}>, {
+const props = withDefaults(defineProps<{
+  show?: boolean;
+  variant?: 'success' | 'error' | 'warning' | 'info';
+}>(), {
   show: true,
   variant: 'info'
-});
+})
 
-if (show) {
-  switch (variant) {
+if (props.show) {
+  switch (props.variant) {
     case 'success':
       toast.open({
         message: 'Success message',
