@@ -1,4 +1,6 @@
-export function saveSession(session: any) {
+import { Session } from "@supabase/supabase-js";
+
+export function saveSession(session: Session | null) {
   if (session) {
     localStorage.setItem('userSession', JSON.stringify(session));
   } else {
