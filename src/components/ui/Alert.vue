@@ -1,7 +1,7 @@
 <template>
     <div v-if="show" :class="[
       'rounded-md p-4',
-      variant === 'success' && 'bg-green-50',
+      variant === 'success' && 'mt-4 rounded-md bg-green-50 p-4',
       variant === 'error' && 'bg-red-50',
       variant === 'warning' && 'bg-yellow-50',
       variant === 'info' && 'bg-blue-50'
@@ -21,7 +21,7 @@
   <script setup lang="ts">
   withDefaults(defineProps<{
     show?: boolean
-    variant?: 'success' | 'error' | 'warning' | 'info'
+    variant?: 'success' | 'error' | 'warning' | 'info',
   }>(), {
     show: true,
     variant: 'info'

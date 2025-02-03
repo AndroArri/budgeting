@@ -62,7 +62,6 @@ async function fetchCategories() {
       .select("*")
       .order("created_at", { ascending: false });
 
-      
     if (err) throw err;
     categories.value = data || [];
   } catch (e) {
@@ -213,9 +212,9 @@ onMounted(() => {
       <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
         <Button @click="openModal()" variant="primary">
           <template #icon-left>
-            <PlusIcon class="h-5 w-5" />
+            <PlusIcon class="h-5 w-5 inline-block mr-1" />
           </template>
-          Add Category
+          Categoria
         </Button>
       </div>
     </div>
@@ -289,7 +288,7 @@ onMounted(() => {
           <div>
             <label class="block text-sm font-medium text-gray-700">Color</label>
             <div class="mt-2 grid grid-cols-6 gap-2">
-              <button
+              <Button
                 v-for="color in colors"
                 :key="color"
                 type="button"

@@ -54,5 +54,4 @@ function onChange(event: Event) {
   emit("update:modelValue", target.checked);
 }
 
-defineEmits(["update:modelValue"]);
 </script>

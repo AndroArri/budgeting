@@ -9,6 +9,8 @@ import {
   XMarkIcon,
   ArrowPathIcon,
 } from "@heroicons/vue/24/outline";
+import Input from "../components/ui/Input.vue";
+import Select from "../components/ui/Select.vue";
 
 interface Payment {
   id: string;
@@ -403,12 +405,11 @@ onMounted(() => {
                   >
                     Title
                   </label>
-                  <input
+                  <Input
                     type="text"
                     id="title"
                     v-model="formData.title"
                     required
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   />
                 </div>
 
@@ -419,12 +420,7 @@ onMounted(() => {
                   >
                     Category
                   </label>
-                  <select
-                    id="category"
-                    v-model="formData.category_id"
-                    required
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  >
+                  <Select id="category" v-model="formData.category_id" required>
                     <option
                       v-for="category in categories"
                       :key="category.id"
@@ -432,7 +428,7 @@ onMounted(() => {
                     >
                       {{ category.icon }} {{ category.title }}
                     </option>
-                  </select>
+                  </Select>
                 </div>
 
                 <div>
@@ -448,7 +444,7 @@ onMounted(() => {
                     >
                       <span class="text-gray-500 sm:text-sm">€</span>
                     </div>
-                    <input
+                    <Input
                       type="number"
                       id="price"
                       v-model="formData.price"
@@ -467,7 +463,7 @@ onMounted(() => {
                   >
                     Start Date
                   </label>
-                  <input
+                  <Input
                     type="date"
                     id="date"
                     v-model="formData.date"
@@ -503,11 +499,10 @@ onMounted(() => {
                     >
                       Recurring Interval
                     </label>
-                    <select
+                    <Select
                       id="recurring_interval"
                       v-model="formData.recurring_interval"
                       required
-                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     >
                       <option value="">Select interval</option>
                       <option
@@ -517,7 +512,7 @@ onMounted(() => {
                       >
                         {{ interval.label }}
                       </option>
-                    </select>
+                    </Select>
                   </div>
 
                   <div>

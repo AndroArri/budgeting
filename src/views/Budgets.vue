@@ -8,6 +8,13 @@ import {
   XMarkIcon,
 } from "@heroicons/vue/24/outline";
 
+import Button from "../components/ui/Button.vue";
+import Input from "../components/ui/Input.vue";
+import Modal from "../components/ui/Modal.vue";
+import Alert from "../components/ui/Alert.vue";
+import Select from "../components/ui/Select.vue";
+
+
 interface Budget {
   id: string;
   title: string;
@@ -27,6 +34,7 @@ const categories = ref<Category[]>([]);
 const loading = ref(true);
 const error = ref("");
 const success = ref("");
+const disableAddBudget = ref(false);
 
 const showModal = ref(false);
 const editingBudget = ref<Budget | null>(null);
@@ -52,6 +60,7 @@ async function fetchBudgets() {
       // TODO Translate
       // TODO magari una modale?
       error.value = "Prima crea un budget";
+
       return;
     }
     budgets.value = data.map((budget: any) => ({
@@ -79,6 +88,7 @@ async function fetchCategories() {
       // TODO Translate
       // TODO magari una modale?
       error.value = "Prima crea una categoria";
+      disableAddBudget.value = true;
       return;
     }
     categories.value = data;
@@ -191,15 +201,16 @@ onMounted(() => {
         <p class="mt-2 text-sm text-gray-700">Gestisci i tuoi budget</p>
       </div>
       <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-        <button
+        <Button
           type="button"
           @click="openModal()"
-          class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white hover:bg-indigo-500"
+          variant="primary"
+          :disabled="disableAddBudget"
         >
           <PlusIcon class="h-5 w-5 inline-block mr-1" />
           <!-- TODO Translate -->
-          Aggiungi budget
-        </button>
+          Budget
+        </Button>
       </div>
     </div>
 
@@ -207,6 +218,9 @@ onMounted(() => {
     <div v-if="success" class="mt-4 rounded-md bg-green-50 p-4">
       <div class="text-sm text-green-700">{{ success }}</div>
     </div>
+    <Alert :show="success !== ''">
+      {{ success }}
+    </Alert>
 
     <!-- Error Alert -->
     <div v-if="error" class="mt-4 rounded-md bg-red-50 p-4">
@@ -298,12 +312,11 @@ onMounted(() => {
                     <!-- TODO Translate -->
                     Nome del budget
                   </label>
-                  <input
+                  <Input
                     type="text"
                     id="title"
                     v-model="formData.title"
                     required
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   />
                 </div>
 
@@ -315,11 +328,10 @@ onMounted(() => {
                     <!-- TODO Translate -->
                     Categoria
                   </label>
-                  <select
+                  <Select
                     id="category"
                     v-model="formData.category_id"
                     required
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   >
                     <option
                       v-for="category in categories"
@@ -328,7 +340,7 @@ onMounted(() => {
                     >
                       {{ category.icon }} {{ category.title }}
                     </option>
-                  </select>
+                  </Select>
                 </div>
 
                 <div>
@@ -386,12 +398,12 @@ onMounted(() => {
               </div>
 
               <div class="mt-5 sm:mt-6">
-                <button
+                <Button
                   type="submit"
                   class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
                   {{ editingBudget ? "Update" : "Create" }} Budget
-                </button>
+                </Button>
               </div>
             </form>
           </div>

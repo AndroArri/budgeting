@@ -3,6 +3,8 @@ import { ref, onMounted } from "vue";
 import { supabase } from "../supabase/client";
 import { useAuthStore } from "../stores/auth";
 import { XMarkIcon } from "@heroicons/vue/24/outline";
+import Input from "../components/ui/Input.vue";
+
 
 interface UserProfile {
   id: string;
@@ -323,11 +325,10 @@ onMounted(() => {
                 Email address
               </label>
               <div class="mt-1">
-                <input
+                <Input
                   type="email"
-                  :value="authStore.user?.email"
+                  :modelValue="authStore.user?.email"
                   disabled
-                  class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm disabled:bg-gray-100"
                 />
               </div>
             </div>
@@ -340,11 +341,10 @@ onMounted(() => {
                 First name
               </label>
               <div class="mt-1">
-                <input
+                <Input
                   id="first_name"
                   v-model="formData.first_name"
                   type="text"
-                  class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 />
               </div>
             </div>
@@ -357,11 +357,10 @@ onMounted(() => {
                 Last name
               </label>
               <div class="mt-1">
-                <input
+                <Input
                   id="last_name"
                   v-model="formData.last_name"
                   type="text"
-                  class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 />
               </div>
             </div>
