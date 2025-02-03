@@ -87,13 +87,15 @@ function openModal(category: Category | null = null) {
       title: category.title,
       icon: category.icon,
       color: category.color,
+      amount: "",
+      recurringInterval: "",
     };
-  } else {
-    editingCategory.value = null;
     formData.value = {
       title: "",
       icon: "Home",
       color: "#3B82F6",
+      amount: "",
+      recurringInterval: "",
     };
   }
   showModal.value = true;
