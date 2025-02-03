@@ -36,9 +36,9 @@ const formData = ref({
 });
 
 const tableColumns = [
-  { key: "title", label: "Title" },
-  { key: "price", label: "Amount", align: "right" as const },
-  { key: "is_personal", label: "Personal", align: "center" as const },
+  { key: "title", label: "Titolo" },
+  { key: "price", label: "Importo", align: "right" as const },
+  { key: "is_personal", label: "Personale", align: "center" as const },
   { key: "actions", label: "", align: "right" as const },
 ];
 
@@ -55,7 +55,7 @@ async function fetchIncomes() {
     if (err) throw err;
     incomes.value = data || [];
   } catch (e) {
-    error.value = "Error loading incomes";
+    error.value = "Errore nel caricamento dei redditi";
     console.error("Error:", e);
   } finally {
     loading.value = false;
@@ -97,7 +97,7 @@ async function handleSubmit() {
         .eq("id", editingIncome.value.id);
 
       if (err) throw err;
-      success.value = "Income updated successfully";
+      success.value = "Reddito aggiornato con successo";
     } else {
       const user = await supabase.auth.getUser();
       const user_id = user.data.user?.id;
@@ -111,29 +111,29 @@ async function handleSubmit() {
       });
 
       if (err) throw err;
-      success.value = "Income created successfully";
+      success.value = "Reddito creato con successo";
     }
 
     showModal.value = false;
     await fetchIncomes();
   } catch (e) {
-    error.value = "Error saving income";
+    error.value = "Errore nel salvataggio del reddito";
     console.error("Error:", e);
   }
 }
 
 async function deleteIncome(id: string) {
-  if (!confirm("Are you sure you want to delete this income?")) return;
+  if (!confirm("Sei sicuro di voler eliminare questo reddito?")) return;
 
   try {
     error.value = "";
     const { error: err } = await supabase.from("incomes").delete().eq("id", id);
 
     if (err) throw err;
-    success.value = "Income deleted successfully";
+    success.value = "Reddito eliminato con successo";
     await fetchIncomes();
   } catch (e) {
-    error.value = "Error deleting income";
+    error.value = "Errore nell'eliminazione del reddito";
     console.error("Error:", e);
   }
 }
@@ -147,15 +147,15 @@ onMounted(() => {
   <div>
     <div class="sm:flex sm:items-center">
       <div class="sm:flex-auto">
-        <h1 class="text-2xl font-semibold text-gray-900">Income</h1>
-        <p class="mt-2 text-sm text-gray-700">Manage your income sources</p>
+        <h1 class="text-2xl font-semibold text-gray-900">Redditi</h1>
+        <p class="mt-2 text-sm text-gray-700">Gestisci le tue fonti di reddito</p>
       </div>
       <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
         <Button @click="openModal()" variant="primary">
           <template #icon-left>
             <PlusIcon class="h-5 w-5" />
           </template>
-          Add Income
+          Aggiungi Reddito
         </Button>
       </div>
     </div>
@@ -169,7 +169,7 @@ onMounted(() => {
     </Alert>
 
     <div v-if="loading" class="mt-6 text-center">
-      <div class="text-sm text-gray-500">Loading incomes...</div>
+      <div class="text-sm text-gray-500">Caricamento redditi...</div>
     </div>
 
     <Table v-else class="mt-8" :columns="tableColumns" :items="incomes">
@@ -177,7 +177,7 @@ onMounted(() => {
 
       <template #is_personal="{ item }">
         <Badge :variant="item.is_personal ? 'success' : 'gray'">
-          {{ item.is_personal ? "Yes" : "No" }}
+          {{ item.is_personal ? "Sì" : "No" }}
         </Badge>
       </template>
 
@@ -193,15 +193,15 @@ onMounted(() => {
 
     <Modal
       v-model="showModal"
-      :title="editingIncome ? 'Edit Income' : 'Add Income'"
+      :title="editingIncome ? 'Modifica Reddito' : 'Aggiungi Reddito'"
     >
       <form @submit.prevent="handleSubmit" class="space-y-4">
-        <Input v-model="formData.title" label="Title" required />
+        <Input v-model="formData.title" label="Titolo" required />
 
         <Input
           v-model="formData.price"
           type="number"
-          label="Amount"
+          label="Importo"
           prefix="€"
           required
           min="0"
@@ -210,8 +210,8 @@ onMounted(() => {
 
         <Checkbox
           v-model="formData.is_personal"
-          label="Personal income"
-          description="Mark this income as personal"
+          label="Reddito personale"
+          description="Segna questo reddito come personale"
         />
       </form>
 
@@ -222,9 +222,9 @@ onMounted(() => {
           class="ml-3"
           @click="handleSubmit"
         >
-          {{ editingIncome ? "Update" : "Create" }} Income
+          {{ editingIncome ? "Aggiorna" : "Crea" }} Reddito
         </Button>
-        <Button @click="showModal = false" variant="secondary"> Cancel </Button>
+        <Button @click="showModal = false" variant="secondary"> Annulla </Button>
       </template>
     </Modal>
   </div>
