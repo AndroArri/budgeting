@@ -204,7 +204,7 @@ async function fetchData() {
       is_percentage: budget.is_percentage ?? false,
     }));
   } catch (e) {
-    error.value = "Error loading dashboard data";
+    error.value = "Errore nel caricamento dei dati della dashboard";
     console.error("Error:", e);
   } finally {
     loading.value = false;
@@ -218,7 +218,7 @@ onMounted(() => {
 
 <template>
   <div>
-    <h1 class="text-2xl font-semibold text-gray-900">Dashboard</h1>
+    <h1 class="text-2xl font-semibold text-gray-900">Cruscotto</h1>
 
     <!-- Error Alert -->
     <div v-if="error" class="mt-4 rounded-md bg-red-50 p-4">
@@ -227,14 +227,14 @@ onMounted(() => {
 
     <!-- Loading State -->
     <div v-if="loading" class="mt-6 text-center">
-      <div class="text-sm text-gray-500">Loading dashboard data...</div>
+      <div class="text-sm text-gray-500">Caricamento dati della dashboard...</div>
     </div>
 
     <!-- Dashboard Content -->
     <div v-else class="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
       <!-- Monthly Expenses Chart -->
       <div class="bg-white p-6 rounded-lg shadow">
-        <h2 class="text-lg font-medium text-gray-900 mb-4">Monthly Expenses</h2>
+        <h2 class="text-lg font-medium text-gray-900 mb-4">Spese Mensili</h2>
         <div class="h-80">
           <Line :data="monthlyData" :options="chartOptions" />
         </div>
@@ -243,7 +243,7 @@ onMounted(() => {
       <!-- Expenses by Category Chart -->
       <div class="bg-white p-6 rounded-lg shadow">
         <h2 class="text-lg font-medium text-gray-900 mb-4">
-          Expenses by Category
+          Spese per Categoria
         </h2>
         <div class="h-80">
           <Doughnut :data="categoryData" :options="chartOptions" />
@@ -253,7 +253,7 @@ onMounted(() => {
       <!-- Budget Status Chart -->
       <div class="bg-white p-6 rounded-lg shadow lg:col-span-2">
         <h2 class="text-lg font-medium text-gray-900 mb-4">
-          Budget Status (Current Month)
+          Stato del Budget (Mese Corrente)
         </h2>
         <div class="h-80">
           <Bar :data="budgetData" :options="chartOptions" />
