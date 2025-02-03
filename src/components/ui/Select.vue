@@ -14,10 +14,9 @@
       :required="required"
       :disabled="disabled"
       :class="[
-        'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm',
-        disabled && 'bg-gray-100 cursor-not-allowed',
-        error &&
-          'border-red-300 text-red-900 focus:border-red-500 focus:ring-red-500',
+        'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm',
+        disabled && 'bg-gray-200 cursor-not-allowed',
+        error && 'border-red-300 text-red-900 focus:border-red-500 focus:ring-red-500',
       ]"
       v-bind="$attrs"
     >
