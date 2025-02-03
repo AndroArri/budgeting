@@ -74,7 +74,7 @@ async function fetchCategories() {
   } catch (e) {
     console.error("Error loading categories:", e);
     error.value =
-      "Unable to load categories. Please check your connection and try again.";
+      "Impossibile caricare le categorie. Controlla la tua connessione e riprova.";
   } finally {
     loading.value = false;
   }
@@ -174,13 +174,13 @@ async function openDeleteModal(category: Category) {
       category.id
     );
     if ((paymentsCount ?? 0) > 0 || (budgetsCount ?? 0) > 0) {
-      deleteError.value = `This category cannot be deleted because it has ${paymentsCount} payments and ${budgetsCount} budgets associated with it`;
+      deleteError.value = `Questa categoria non può essere eliminata perché ha ${paymentsCount} pagamenti e ${budgetsCount} budget associati.`;
     }
 
     showDeleteModal.value = true;
   } catch (e) {
     console.error("Error checking category usage:", e);
-    error.value = "Unable to verify if the category can be deleted";
+    error.value = "Impossibile verificare se la categoria può essere eliminata";
   }
 }
 
@@ -194,7 +194,7 @@ async function handleDelete() {
       .eq("id", deletingCategory.value.id);
 
     if (err) throw err;
-    success.value = "Category deleted successfully";
+    success.value = "Categoria eliminata con successo";
     showDeleteModal.value = false;
     deletingCategory.value = null;
     await fetchCategories();
@@ -334,7 +334,7 @@ onMounted(() => {
     <!-- Delete Modal -->
     <Modal
       v-model="showDeleteModal"
-      title="Delete Category"
+      title="Elimina Categoria"
       icon="ExclamationTriangleIcon"
       iconClass="text-red-600"
       iconBackgroundClass="bg-red-100"
@@ -355,10 +355,10 @@ onMounted(() => {
           :disabled="!!deleteError"
           class="ml-3"
         >
-          Delete
+          Elimina
         </Button>
         <Button @click="showDeleteModal = false" variant="secondary">
-          Cancel
+          Annulla
         </Button>
       </template>
     </Modal>

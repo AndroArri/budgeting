@@ -35,25 +35,25 @@ if (props.show) {
   switch (props.variant) {
     case 'success':
       toast.open({
-        message: 'Success message',
+        message: 'Messaggio di successo',
         type: 'success',
       });
       break;
     case 'error':
       toast.open({
-        message: 'Error message',
+        message: 'Messaggio di errore',
         type: 'error',
       });
       break;
     case 'warning':
       toast.open({
-        message: 'Warning message',
+        message: 'Messaggio di avviso',
         type: 'warning',
       });
       break;
     case 'info':
       toast.open({
-        message: 'Info message',
+        message: 'Messaggio informativo',
         type: 'info',
       });
       break;
