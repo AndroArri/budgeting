@@ -217,9 +217,9 @@ onMounted(() => {
   <div>
     <div class="sm:flex sm:items-center">
       <div class="sm:flex-auto">
-        <h1 class="text-2xl font-semibold text-gray-900">Payments</h1>
+        <h1 class="text-2xl font-semibold text-gray-900">Pagamenti</h1>
         <p class="mt-2 text-sm text-gray-700">
-          Manage your payments and expenses
+          Gestisci i tuoi pagamenti e spese
         </p>
       </div>
       <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
@@ -403,7 +403,7 @@ onMounted(() => {
                     for="title"
                     class="block text-sm font-medium text-gray-700"
                   >
-                    Title
+                    Titolo
                   </label>
                   <Input
                     type="text"
@@ -418,7 +418,7 @@ onMounted(() => {
                     for="category"
                     class="block text-sm font-medium text-gray-700"
                   >
-                    Category
+                    Categoria
                   </label>
                   <Select id="category" v-model="formData.category_id" required>
                     <option
@@ -436,7 +436,7 @@ onMounted(() => {
                     for="price"
                     class="block text-sm font-medium text-gray-700"
                   >
-                    Amount
+                    Importo
                   </label>
                   <div class="relative mt-1 rounded-md shadow-sm">
                     <div
@@ -461,7 +461,7 @@ onMounted(() => {
                     for="date"
                     class="block text-sm font-medium text-gray-700"
                   >
-                    Start Date
+                    Data di Inizio
                   </label>
                   <Input
                     type="date"

@@ -38,6 +38,10 @@ const formData = ref({
 const tableColumns = [
   { key: "title", label: "Titolo" },
   { key: "price", label: "Importo", align: "right" as const },
+  { key: "date", label: "Data", align: "center" as const },
+  { key: "category", label: "Categoria", align: "center" as const },
+  { key: "title", label: "Titolo" },
+  { key: "price", label: "Importo", align: "right" as const },
   { key: "is_personal", label: "Personale", align: "center" as const },
   { key: "actions", label: "", align: "right" as const },
 ];
