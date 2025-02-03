@@ -34,7 +34,12 @@ const formData = ref({
   title: "",
   icon: "Home",
   color: "#3B82F6",
+  amount: "",
 });
+
+function formatAmount() {
+  formData.value.amount = formData.value.amount.replace('.', ',');
+}
 
 // Create color picker
 const colors = [
@@ -275,7 +280,7 @@ onMounted(() => {
       :title="editingCategory ? 'Edit Category' : 'Add Category'"
     >
       <div class="space-y-4">
-        <form @submit.prevent="handleSubmit">
+        <form @submit.prevent="handleSubmit" @input="formatAmount">
           <Input v-model="formData.title" label="Name" required />
 
           <div>
