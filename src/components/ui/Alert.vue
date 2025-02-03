@@ -19,11 +19,44 @@
   </template>
   
   <script setup lang="ts">
-  withDefaults(defineProps<{
-    show?: boolean
-    variant?: 'success' | 'error' | 'warning' | 'info',
-  }>(), {
-    show: true,
-    variant: 'info'
-  })
+import { useToast } from 'vue-toast-notification';
+
+const toast = useToast();
+
+withDefaults(defineProps<{
+  show?: boolean
+  variant?: 'success' | 'error' | 'warning' | 'info',
+}>, {
+  show: true,
+  variant: 'info'
+});
+
+if (show) {
+  switch (variant) {
+    case 'success':
+      toast.open({
+        message: 'Success message',
+        type: 'success',
+      });
+      break;
+    case 'error':
+      toast.open({
+        message: 'Error message',
+        type: 'error',
+      });
+      break;
+    case 'warning':
+      toast.open({
+        message: 'Warning message',
+        type: 'warning',
+      });
+      break;
+    case 'info':
+      toast.open({
+        message: 'Info message',
+        type: 'info',
+      });
+      break;
+  }
+}
   </script>
