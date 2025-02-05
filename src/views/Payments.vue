@@ -46,7 +46,7 @@ const formData = ref({
   is_personal: false,
   is_recurring: false,
   recurring_end_date: "",
-  recurring_interval: null as "weekly" | "monthly" | "yearly" | null,
+  recurring_interval: "" as "weekly" | "monthly" | "yearly" | "",
 });
 
 const recurringIntervals = [
@@ -114,7 +114,7 @@ function openModal(payment: Payment | null = null) {
       is_personal: payment.is_personal,
       is_recurring: payment.is_recurring,
       recurring_end_date: payment.recurring_end_date || "",
-      recurring_interval: payment.recurring_interval,
+      recurring_interval: payment.recurring_interval || "",
     };
   } else {
     editingPayment.value = null;
@@ -126,7 +126,7 @@ function openModal(payment: Payment | null = null) {
       is_personal: false,
       is_recurring: false,
       recurring_end_date: "",
-      recurring_interval: null,
+      recurring_interval: "",
     };
   }
   showModal.value = true;
@@ -366,180 +366,157 @@ onMounted(() => {
         </div>
       </div>
     </div>
+  </div>
+  <!-- Modal -->
+  <Modal
+    v-model="showModal"
+    :title="editingPayment ? 'Modifica Pagamento' : 'Aggiungi Pagamento'"
+  >
+    <form @submit.prevent="handleSubmit">
+      <div class="space-y-4">
+        <div>
+          <label for="title" class="block text-sm font-medium text-gray-700">
+            Titolo
+          </label>
+          <Input type="text" id="title" v-model="formData.title" required />
+        </div>
 
-    <!-- Modal -->
-    <Modal
-      v-model="showModal"
-      :title="editingPayment ? 'Modifica Pagamento' : 'Aggiungi Pagamento'"
-    >
-      <form @submit.prevent="handleSubmit">
-        <div class="space-y-4">
-          <div>
-            <label
-              for="title"
-              class="block text-sm font-medium text-gray-700"
+        <div>
+          <label for="category" class="block text-sm font-medium text-gray-700">
+            Categoria
+          </label>
+          <Select id="category" v-model="formData.category_id" required>
+            <option
+              v-for="category in categories"
+              :key="category.id"
+              :value="category.id"
             >
-              Titolo
-            </label>
+              {{ category.icon }} {{ category.title }}
+            </option>
+          </Select>
+        </div>
+
+        <div>
+          <label for="price" class="block text-sm font-medium text-gray-700">
+            Importo
+          </label>
+          <div class="relative mt-1 rounded-md shadow-sm">
+            <div
+              class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
+            >
+              <span class="text-gray-500 sm:text-sm">€</span>
+            </div>
             <Input
-              type="text"
-              id="title"
-              v-model="formData.title"
+              type="number"
+              id="price"
+              v-model="formData.price"
               required
+              min="0"
+              step="0.01"
+              class="block w-full rounded-md border-gray-300 pl-7 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
             />
           </div>
+        </div>
 
-                <div>
-                  <label
-                    for="category"
-                    class="block text-sm font-medium text-gray-700"
-                  >
-                    Categoria
-                  </label>
-                  <Select id="category" v-model="formData.category_id" required>
-                    <option
-                      v-for="category in categories"
-                      :key="category.id"
-                      :value="category.id"
-                    >
-                      {{ category.icon }} {{ category.title }}
-                    </option>
-                  </Select>
-                </div>
+        <div>
+          <label for="date" class="block text-sm font-medium text-gray-700">
+            Data di Inizio
+          </label>
+          <Input
+            type="date"
+            id="date"
+            v-model="formData.date"
+            required
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+          />
+        </div>
 
-                <div>
-                  <label
-                    for="price"
-                    class="block text-sm font-medium text-gray-700"
-                  >
-                    Importo
-                  </label>
-                  <div class="relative mt-1 rounded-md shadow-sm">
-                    <div
-                      class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
-                    >
-                      <span class="text-gray-500 sm:text-sm">€</span>
-                    </div>
-                    <Input
-                      type="number"
-                      id="price"
-                      v-model="formData.price"
-                      required
-                      min="0"
-                      step="0.01"
-                      class="block w-full rounded-md border-gray-300 pl-7 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    />
-                  </div>
-                </div>
+        <div class="relative flex items-start">
+          <div class="flex h-6 items-center">
+            <input
+              id="is_recurring"
+              v-model="formData.is_recurring"
+              type="checkbox"
+              class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+            />
+          </div>
+          <div class="ml-3 text-sm leading-6">
+            <label for="is_recurring" class="font-medium text-gray-900"
+              >Recurring payment</label
+            >
+            <p class="text-gray-500">
+              This payment will repeat at regular intervals
+            </p>
+          </div>
+        </div>
 
-                <div>
-                  <label
-                    for="date"
-                    class="block text-sm font-medium text-gray-700"
-                  >
-                    Data di Inizio
-                  </label>
-                  <Input
-                    type="date"
-                    id="date"
-                    v-model="formData.date"
-                    required
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  />
-                </div>
+        <div v-if="formData.is_recurring" class="space-y-4">
+          <div>
+            <label
+              for="recurring_interval"
+              class="block text-sm font-medium text-gray-700"
+            >
+              Recurring Interval
+            </label>
+            <Select
+              id="recurring_interval"
+              v-model="formData.recurring_interval"
+              required
+            >
+              <option value="">Select interval</option>
+              <option
+                v-for="interval in recurringIntervals"
+                :key="interval.value"
+                :value="interval.value"
+              >
+                {{ interval.label }}
+              </option>
+            </Select>
+          </div>
 
-                <div class="relative flex items-start">
-                  <div class="flex h-6 items-center">
-                    <input
-                      id="is_recurring"
-                      v-model="formData.is_recurring"
-                      type="checkbox"
-                      class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                    />
-                  </div>
-                  <div class="ml-3 text-sm leading-6">
-                    <label for="is_recurring" class="font-medium text-gray-900"
-                      >Recurring payment</label
-                    >
-                    <p class="text-gray-500">
-                      This payment will repeat at regular intervals
-                    </p>
-                  </div>
-                </div>
+          <div>
+            <label
+              for="recurring_end_date"
+              class="block text-sm font-medium text-gray-700"
+            >
+              End Date (Optional)
+            </label>
+            <input
+              type="date"
+              id="recurring_end_date"
+              v-model="formData.recurring_end_date"
+              :min="formData.date"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            />
+          </div>
+        </div>
 
-                <div v-if="formData.is_recurring" class="space-y-4">
-                  <div>
-                    <label
-                      for="recurring_interval"
-                      class="block text-sm font-medium text-gray-700"
-                    >
-                      Recurring Interval
-                    </label>
-                    <Select
-                      id="recurring_interval"
-                      v-model="formData.recurring_interval"
-                      required
-                    >
-                      <option value="">Select interval</option>
-                      <option
-                        v-for="interval in recurringIntervals"
-                        :key="interval.value"
-                        :value="interval.value"
-                      >
-                        {{ interval.label }}
-                      </option>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <label
-                      for="recurring_end_date"
-                      class="block text-sm font-medium text-gray-700"
-                    >
-                      End Date (Optional)
-                    </label>
-                    <input
-                      type="date"
-                      id="recurring_end_date"
-                      v-model="formData.recurring_end_date"
-                      :min="formData.date"
-                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    />
-                  </div>
-                </div>
-
-                <div class="relative flex items-start">
-                  <div class="flex h-6 items-center">
-                    <input
-                      id="is_personal"
-                      v-model="formData.is_personal"
-                      type="checkbox"
-                      class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                    />
-                  </div>
-                  <div class="ml-3 text-sm leading-6">
-                    <label for="is_personal" class="font-medium text-gray-900"
-                      >Personal expense</label
-                    >
-                    <p class="text-gray-500">
-                      Mark this payment as a personal expense
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div class="mt-5 sm:mt-6">
-                <button
-                  type="submit"
-                  class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                >
-                  {{ editingPayment ? "Aggiorna" : "Crea" }} Pagamento
-                </button>
-              </div>
-            </form>
+        <div class="relative flex items-start">
+          <div class="flex h-6 items-center">
+            <input
+              id="is_personal"
+              v-model="formData.is_personal"
+              type="checkbox"
+              class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+            />
+          </div>
+          <div class="ml-3 text-sm leading-6">
+            <label for="is_personal" class="font-medium text-gray-900"
+              >Personal expense</label
+            >
+            <p class="text-gray-500">Mark this payment as a personal expense</p>
           </div>
         </div>
       </div>
-    </div>
-  </div>
+
+      <div class="mt-5 sm:mt-6">
+        <button
+          type="submit"
+          class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+        >
+          {{ editingPayment ? "Aggiorna" : "Crea" }} Pagamento
+        </button>
+      </div>
+    </form>
+  </Modal>
 </template>
