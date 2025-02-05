@@ -11,6 +11,7 @@ import {
 } from "@heroicons/vue/24/outline";
 import Input from "../components/ui/Input.vue";
 import Select from "../components/ui/Select.vue";
+import Modal from "../components/ui/Modal.vue";
 
 interface Payment {
   id: string;
@@ -225,7 +226,7 @@ onMounted(() => {
       <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
         <button
           type="button"
-          @click="() => { showModal.value = true; openModal(); }"
+          @click="() => openModal()"
           class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white hover:bg-indigo-500"
         >
           <PlusIcon class="h-5 w-5 inline-block mr-1" />
