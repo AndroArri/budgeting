@@ -10,7 +10,7 @@ import {
   ArrowPathIcon,
 } from "@heroicons/vue/24/outline";
 import Input from "../components/ui/Input.vue";
-import Select from "../components/ui/Select.vue";
+import CategorySelect from "../components/ui/CategorySelect.vue";
 import Modal from "../components/ui/Modal.vue";
 
 interface Payment {
@@ -386,15 +386,7 @@ onMounted(() => {
           <label for="category" class="block text-sm font-medium text-gray-700">
             Categoria
           </label>
-          <Select id="category" v-model="formData.category_id" required>
-            <option
-              v-for="category in categories"
-              :key="category.id"
-              :value="category.id"
-            >
-              {{ category.icon }} {{ category.title }}
-            </option>
-          </Select>
+          <CategorySelect v-model="formData.category_id" />
         </div>
 
         <div>
