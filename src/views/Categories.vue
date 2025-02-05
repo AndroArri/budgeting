@@ -312,15 +312,6 @@ onMounted(() => {
               />
             </div>
           </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700">Intervallo Ricorrente</label>
-            <Select v-model="formData.recurringInterval" placeholder="Seleziona intervallo">
-              <option value="daily">Giornaliero</option>
-              <option value="weekly">Settimanale</option>
-              <option value="monthly">Mensile</option>
-              <option value="yearly">Annuale</option>
-            </Select>
-          </div>
         </form>
       </div>
       <template #footer>
