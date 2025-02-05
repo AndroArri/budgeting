@@ -9,7 +9,7 @@ import {
 
 import Button from "../components/ui/Button.vue";
 import Input from "../components/ui/Input.vue";
-import Select from "../components/ui/Select.vue";
+import Card from "../components/ui/Card.vue";
 import Modal from "../components/ui/Modal.vue";
 import Alert from "../components/ui/Alert.vue";
 import IconPicker from "../components/ui/IconPicker.vue";
@@ -244,38 +244,13 @@ onMounted(() => {
       v-else
       class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
     >
-      <div
+      <Card
         v-for="category in categories"
         :key="category.id"
-        class="relative flex items-center space-x-3 rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm"
-      >
-        <div
-          class="flex-shrink-0 rounded-full p-2"
-          :style="{ backgroundColor: category.color + '20' }"
-        >
-          <component
-            :is="category.icon + 'Icon'"
-            class="h-6 w-6"
-            :style="{ color: category.color }"
-          />
-        </div>
-        <div class="min-w-0 flex-1">
-          <p class="text-sm font-medium text-gray-900">{{ category.title }}</p>
-        </div>
-        <div class="flex-shrink-0 space-x-2">
-          <Button
-            @click="openModal(category)"
-            variant="secondary"
-            size="sm"
-            class="mr-2"
-          >
-            <PencilSquareIcon class="h-5 w-5" />
-          </Button>
-          <Button @click="openDeleteModal(category)" variant="abort" size="sm">
-            <TrashIcon class="h-5 w-5" />
-          </Button>
-        </div>
-      </div>
+        :category="category"
+        @edit="openModal"
+        @delete="openDeleteModal"
+      />
     </div>
 
     <!-- Edit Modal -->
