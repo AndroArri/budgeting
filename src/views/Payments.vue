@@ -225,7 +225,7 @@ onMounted(() => {
       <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
         <button
           type="button"
-          @click="openModal()"
+          @click="() => { showModal.value = true; openModal(); }"
           class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white hover:bg-indigo-500"
         >
           <PlusIcon class="h-5 w-5 inline-block mr-1" />
