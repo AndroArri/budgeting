@@ -29,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-withDefaults(
+export default {
   defineProps<{
     modelValue: string | number;
     id?: string;
@@ -53,4 +53,5 @@ function onChange(event: Event) {
   emit("update:modelValue", target.checked);
 }
 
+};
 </script>
