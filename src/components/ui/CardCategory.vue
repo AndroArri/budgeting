@@ -56,7 +56,7 @@
 
 <script setup lang="ts">
 import { defineProps, defineEmits } from "vue";
-import edit from "../../assets/edit.svg";
+import edit from "@assets/edit.svg";
 
 defineProps({
   category: {
